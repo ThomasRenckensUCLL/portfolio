@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
-# Runs automatically on first container boot (Postgres docker-entrypoint-initdb.d
-# convention). Loads the schema, then the seed data (sample by default; the
-# full dataset only when USE_FULL_DATASET=true).
+# Loads the schema, then the seed data (sample by default; the full dataset
+# only when USE_FULL_DATASET=true).
+#
+# NOT run directly by Postgres: db/init/00-init.sql (the only file in the init
+# folder) calls it with `bash`, so it does not depend on the file's executable
+# bit, its #! line, or its line endings (CRLF is stripped first). That made
+# first-start failures on some students' machines ("bad interpreter:
+# Permission denied", "pipefail\r") impossible.
 set -euo pipefail
 
 on_error() {
